@@ -11,7 +11,7 @@ use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION );
 @EXPORT         = ();
 @EXPORT_OK   = qw( alphabetic numeric find_time get_between get_last );
 %EXPORT_TAGS = ( 'all' => \@EXPORT_OK );
-$VERSION     = '0.011';
+$VERSION     = '0.012';
 
 my ($count, $exact_match );
 my $debug       = 0;  # set true to watch progression of algorithm
