@@ -1,0 +1,9 @@
+MANIFEST
+SortedSeek.pm
+Makefile.PL
+Changes
+test.pl
+README
+misc/make_manifest.pl
+html/docs.css
+html/SortedSeek.html
