@@ -39,14 +39,14 @@
         <LI><A HREF="#options">OPTIONS</A></LI>
         <UL>
 
-            <LI><A HREF="#file::seek::error()">File::Seek::error()</A></LI>
-            <LI><A HREF="#file::seek::was_exact()">File::Seek::was_exact()</A></LI>
-            <LI><A HREF="#file::seek::set_cuddle() file::seek::set_no_cuddle()">File::Seek::set_cuddle()  File::Seek::set_no_cuddle()</A></LI>
-            <LI><A HREF="#file::seek::set_descending() file::seek::set_ascending()">File::Seek::set_descending() File::Seek::set_ascending()</A></LI>
-            <LI><A HREF="#file::seek::set_max_tries($max)">File::Seek::set_max_tries($max)</A></LI>
-            <LI><A HREF="#file::seek::set_line_length($integer)">File::Seek::set_line_length($integer)</A></LI>
-            <LI><A HREF="#file::seek::set_silent() file::seek::set_verbose()">File::Seek::set_silent()  File::Seek::set_verbose()</A></LI>
-            <LI><A HREF="#file::seek::set_debug() file::seek::no_debug()">File::Seek::set_debug()  File::Seek::no_debug()</A></LI>
+            <LI><A HREF="#file::sortedseek::error()">File::SortedSeek::error()</A></LI>
+            <LI><A HREF="#file::sortedseek::was_exact()">File::SortedSeek::was_exact()</A></LI>
+            <LI><A HREF="#file::sortedseek::set_cuddle() file::sortedseek::set_no_cuddle()">File::SortedSeek::set_cuddle()  File::SortedSeek::set_no_cuddle()</A></LI>
+            <LI><A HREF="#file::sortedseek::set_descending() file::sortedseek::set_ascending()">File::SortedSeek::set_descending() File::SortedSeek::set_ascending()</A></LI>
+            <LI><A HREF="#file::sortedseek::set_max_tries($max)">File::SortedSeek::set_max_tries($max)</A></LI>
+            <LI><A HREF="#file::sortedseek::set_line_length($integer)">File::SortedSeek::set_line_length($integer)</A></LI>
+            <LI><A HREF="#file::sortedseek::set_silent() file::sortedseek::set_verbose()">File::SortedSeek::set_silent()  File::SortedSeek::set_verbose()</A></LI>
+            <LI><A HREF="#file::sortedseek::set_debug() file::sortedseek::no_debug()">File::SortedSeek::set_debug()  File::SortedSeek::no_debug()</A></LI>
         </UL>
 
         <LI><A HREF="#speed">SPEED</A></LI>
@@ -65,14 +65,14 @@
 <P>
 <H2><A NAME="synopsis">SYNOPSIS</A></H2>
 <PRE>
-  use File::Seek ':all';
+  use File::SortedSeek ':all';
   open BIG, $file or die $!;</PRE>
 <PRE>
   # find a number or the first number greater in a file (ascending order)
   $tell = numeric( *BIG, $number );
   # read a line in from where we matched in the file
   $line = &lt;BIG&gt;;
-  print &quot;Found exact match as $line&quot; if File::Seek:was_exact();</PRE>
+  print &quot;Found exact match as $line&quot; if File::SortedSeek:was_exact();</PRE>
 <PRE>
   # find a string or the first string greater in a file (alphabetical order)
   $tell = alphabetic( *BIG, $string );
@@ -98,10 +98,10 @@
   $tell = alphabetic( *BIG, $string, \&amp;munge_line );</PRE>
 <PRE>
   # use methods on files in reverse alphabetic or descending numerical order
-  File::Seek::set_descending();</PRE>
+  File::SortedSeek::set_descending();</PRE>
 <PRE>
   # for inexact matches set FH so first value read is before and second after
-  File::Seek::set_cuddle();</PRE>
+  File::SortedSeek::set_cuddle();</PRE>
 <PRE>
   # get last $n lines of any file as an array
   @lines = get_last( *BIG, $n )
@@ -111,7 +111,7 @@
   @lines = get_last( *BIG, $n, $rec_sep )</PRE>
 <P>
 <H2><A NAME="description">DESCRIPTION</A></H2>
-<P>File::OrderedSeek provides fast access to data from large files. Three 
+<P>File::SortedSeek provides fast access to data from large files. Three 
 methods <CODE>numeric()</CODE> <CODE>alphabetic()</CODE> and <CODE>find_time()</CODE> depend on the file data 
 being sorted in some way. Logfiles are a typical example of big files that 
 are sorted (by date stamp). The <CODE>get_between()</CODE> method can be used to get 
@@ -137,7 +137,7 @@ be searched like this. It is a far more efficient method - see the SPEED
 section for a quick analysis.</P>
 <P>
 <H3><A NAME="abstract">ABSTRACT</A></H3>
-<P>Fiel::OrderedSeek provides fast access to data from large files. Three 
+<P>Fiel::SortedSeek provides fast access to data from large files. Three 
 methods <CODE>numeric()</CODE> <CODE>alphabetic()</CODE> and <CODE>find_time()</CODE> depend on the file data 
 being sorted in some way. Logfiles are a typical example of big files that 
 are sorted (by date stamp). The <CODE>get_between()</CODE> method can be used to get 
@@ -181,7 +181,7 @@ searching for the number 42 in a file like this:</P>
 <P>The number 42 is not actually there but the search will still succeed as it 
 is between 40 and 44. By default the file postion pointer is set to the 
 beginning of the line '44' so the next read from &lt;FILEHANDLE&gt; will return 
-this line. If the File::Seek::set_cuddle() function is called then the file 
+this line. If the File::SortedSeek::set_cuddle() function is called then the file 
 position pointer will be set to the beginning of line '40' so that the 
 first two reads from &lt;FILEHANDLE&gt; will cuddle the in-between value in $find.</P>
 <P>
@@ -333,42 +333,42 @@ import:</P>
     get_last()</PRE>
 <P>You can import just the method you want with a:</P>
 <PRE>
-    use File::Seek 'numeric';</PRE>
+    use File::SortedSeek 'numeric';</PRE>
 <P>or all 5  methods using the ':all' tag.</P>
 <PRE>
-    use File::Seek ':all';</PRE>
+    use File::SortedSeek ':all';</PRE>
 <P>
 <H2><A NAME="options">OPTIONS</A></H2>
 <P>There are some options available via non exported function
 calls. You will need to fully specify the name if you want to use these.</P>
 <P>
-<H3><A NAME="file::seek::error()">File::Seek::error()</A></H3>
+<H3><A NAME="file::sortedseek::error()">File::SortedSeek::error()</A></H3>
 <P>If a function returns undefined there has been an error. <CODE>error()</CODE> will 
 contain the text of the last error message or a null string if there 
 was no error.</P>
 <P>
-<H3><A NAME="file::seek::was_exact()">File::Seek::was_exact()</A></H3>
+<H3><A NAME="file::sortedseek::was_exact()">File::SortedSeek::was_exact()</A></H3>
 <P><CODE>was_exact()</CODE> will return true if an exact match was found. It will be 
 false if the match was in between or failed.</P>
 <P>
-<H3><A NAME="file::seek::set_cuddle() file::seek::set_no_cuddle()">File::Seek::set_cuddle()  File::Seek::set_no_cuddle()</A></H3>
+<H3><A NAME="file::sortedseek::set_cuddle() file::sortedseek::set_no_cuddle()">File::SortedSeek::set_cuddle()  File::SortedSeek::set_no_cuddle()</A></H3>
 <P><CODE>set_cuddle()</CODE> changes the default line returned for in between matches  as 
 discussed above and <CODE>set_no_cuddle()</CODE> restores default behaviour</P>
 <P>
-<H3><A NAME="file::seek::set_descending() file::seek::set_ascending()">File::Seek::set_descending() File::Seek::set_ascending()</A></H3>
+<H3><A NAME="file::sortedseek::set_descending() file::sortedseek::set_ascending()">File::SortedSeek::set_descending() File::SortedSeek::set_ascending()</A></H3>
 <P>By default ascending numerical order and alphabetical order are assumed. 
 This assumption can be reversed by calling <CODE>set_descending()</CODE> and reset 
 by calling <CODE>set_ascending()</CODE> We need to know the order to seek within the 
 file in the correct direction.</P>
 <P>
-<H3><A NAME="file::seek::set_max_tries($max)">File::Seek::set_max_tries($max)</A></H3>
+<H3><A NAME="file::sortedseek::set_max_tries($max)">File::SortedSeek::set_max_tries($max)</A></H3>
 <P>This sets the maximum times that the module will try the halve the 
 difference search before it decides there is a problem and bails out. 
 The default value is 42 which allows files with up to 2**42 or a bit more 
 than 10**12 lines to be processed. A seek in a million line file will take a 
 mere 20 tries to find the required value.</P>
 <P>
-<H3><A NAME="file::seek::set_line_length($integer)">File::Seek::set_line_length($integer)</A></H3>
+<H3><A NAME="file::sortedseek::set_line_length($integer)">File::SortedSeek::set_line_length($integer)</A></H3>
 <P>When you use the <CODE>get_last()</CODE> method the module uses its default 
 line length to estimate how many bytes at the end of the file to read in. 
 You can improve speed slightly and decrease memory usage by setting an 
@@ -376,11 +376,11 @@ accurate line length. The default is 80 chars per line. The function will
 work fine regardless of what the line length is, this is just an efficiency 
 tweak.</P>
 <P>
-<H3><A NAME="file::seek::set_silent() file::seek::set_verbose()">File::Seek::set_silent()  File::Seek::set_verbose()</A></H3>
+<H3><A NAME="file::sortedseek::set_silent() file::sortedseek::set_verbose()">File::SortedSeek::set_silent()  File::SortedSeek::set_verbose()</A></H3>
 <P>You can silence or activate error messages by calling these two subs. The 
 default is verbose.</P>
 <P>
-<H3><A NAME="file::seek::set_debug() file::seek::no_debug()">File::Seek::set_debug()  File::Seek::no_debug()</A></H3>
+<H3><A NAME="file::sortedseek::set_debug() file::sortedseek::no_debug()">File::SortedSeek::set_debug()  File::SortedSeek::no_debug()</A></H3>
 <P>Sets debug on or off. Default is of course off.</P>
 <P>
 <H2><A NAME="speed">SPEED</A></H2>

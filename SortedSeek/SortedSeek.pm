@@ -11,7 +11,7 @@ use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION );
 @EXPORT         = ();
 @EXPORT_OK   = qw( alphabetic numeric find_time get_between get_last );
 %EXPORT_TAGS = ( 'all' => \@EXPORT_OK );
-$VERSION     = '0.01';
+$VERSION     = '0.011';
 
 my ($count, $exact_match );
 my $debug       = 0;  # set true to watch progression of algorithm
@@ -326,14 +326,14 @@ File::SortedSeek -  A Perl module providing fast access to large files
 
 =head2 SYNOPSIS
 
-  use File::Seek ':all';
+  use File::SortedSeek ':all';
   open BIG, $file or die $!;
 
   # find a number or the first number greater in a file (ascending order)
   $tell = numeric( *BIG, $number );
   # read a line in from where we matched in the file
   $line = <BIG>;
-  print "Found exact match as $line" if File::Seek:was_exact();
+  print "Found exact match as $line" if File::SortedSeek:was_exact();
 
   # find a string or the first string greater in a file (alphabetical order)
   $tell = alphabetic( *BIG, $string );
@@ -359,10 +359,10 @@ File::SortedSeek -  A Perl module providing fast access to large files
   $tell = alphabetic( *BIG, $string, \&munge_line );
 
   # use methods on files in reverse alphabetic or descending numerical order
-  File::Seek::set_descending();
+  File::SortedSeek::set_descending();
 
   # for inexact matches set FH so first value read is before and second after
-  File::Seek::set_cuddle();
+  File::SortedSeek::set_cuddle();
 
   # get last $n lines of any file as an array
   @lines = get_last( *BIG, $n )
@@ -373,7 +373,7 @@ File::SortedSeek -  A Perl module providing fast access to large files
 
 =head2 DESCRIPTION
 
-File::OrderedSeek provides fast access to data from large files. Three 
+File::SortedSeek provides fast access to data from large files. Three 
 methods numeric() alphabetic() and find_time() depend on the file data 
 being sorted in some way. Logfiles are a typical example of big files that 
 are sorted (by date stamp). The get_between() method can be used to get 
@@ -403,7 +403,7 @@ section for a quick analysis.
 
 =head3 ABSTRACT
 
-Fiel::OrderedSeek provides fast access to data from large files. Three 
+Fiel::SortedSeek provides fast access to data from large files. Three 
 methods numeric() alphabetic() and find_time() depend on the file data 
 being sorted in some way. Logfiles are a typical example of big files that 
 are sorted (by date stamp). The get_between() method can be used to get 
@@ -453,7 +453,7 @@ searching for the number 42 in a file like this:
 The number 42 is not actually there but the search will still succeed as it 
 is between 40 and 44. By default the file postion pointer is set to the 
 beginning of the line '44' so the next read from <FILEHANDLE> will return 
-this line. If the File::Seek::set_cuddle() function is called then the file 
+this line. If the File::SortedSeek::set_cuddle() function is called then the file 
 position pointer will be set to the beginning of line '40' so that the 
 first two reads from <FILEHANDLE> will cuddle the in-between value in $find.
 
@@ -626,41 +626,41 @@ import:
 
 You can import just the method you want with a:
 
-    use File::Seek 'numeric';
+    use File::SortedSeek 'numeric';
 
 or all 5  methods using the ':all' tag.
 
-    use File::Seek ':all';
+    use File::SortedSeek ':all';
 
 =head2 OPTIONS
 
 There are some options available via non exported function
 calls. You will need to fully specify the name if you want to use these.
 
-=head3 File::Seek::error()
+=head3 File::SortedSeek::error()
 
 If a function returns undefined there has been an error. error() will 
 contain the text of the last error message or a null string if there 
 was no error.
 
-=head3 File::Seek::was_exact()
+=head3 File::SortedSeek::was_exact()
 
 was_exact() will return true if an exact match was found. It will be 
 false if the match was in between or failed.
 
-=head3 File::Seek::set_cuddle()  File::Seek::set_no_cuddle()
+=head3 File::SortedSeek::set_cuddle()  File::SortedSeek::set_no_cuddle()
 
 set_cuddle() changes the default line returned for in between matches  as 
 discussed above and set_no_cuddle() restores default behaviour
 
-=head3 File::Seek::set_descending() File::Seek::set_ascending()
+=head3 File::SortedSeek::set_descending() File::SortedSeek::set_ascending()
 
 By default ascending numerical order and alphabetical order are assumed. 
 This assumption can be reversed by calling set_descending() and reset 
 by calling set_ascending() We need to know the order to seek within the 
 file in the correct direction.
 
-=head3 File::Seek::set_max_tries($max)
+=head3 File::SortedSeek::set_max_tries($max)
 
 This sets the maximum times that the module will try the halve the 
 difference search before it decides there is a problem and bails out. 
@@ -668,7 +668,7 @@ The default value is 42 which allows files with up to 2**42 or a bit more
 than 10**12 lines to be processed. A seek in a million line file will take a 
 mere 20 tries to find the required value.
 
-=head3 File::Seek::set_line_length($integer)
+=head3 File::SortedSeek::set_line_length($integer)
 
 When you use the get_last() method the module uses its default 
 line length to estimate how many bytes at the end of the file to read in. 
@@ -677,12 +677,12 @@ accurate line length. The default is 80 chars per line. The function will
 work fine regardless of what the line length is, this is just an efficiency 
 tweak.
 
-=head3 File::Seek::set_silent()  File::Seek::set_verbose()
+=head3 File::SortedSeek::set_silent()  File::SortedSeek::set_verbose()
 
 You can silence or activate error messages by calling these two subs. The 
 default is verbose.
 
-=head3 File::Seek::set_debug()  File::Seek::no_debug()
+=head3 File::SortedSeek::set_debug()  File::SortedSeek::no_debug()
 
 Sets debug on or off. Default is of course off.
 

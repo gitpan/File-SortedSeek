@@ -15,10 +15,7 @@ To install this module type the following:
    make install
 
 If you insist on doing a cut an paste install you will need
-to install the following file in a location like the locations shown (Win32 and *nix 
-respectively):
-
-perl/site/lib/File/SortedSeek.pm
+to install the following file in a location like this:
 
 usr/lib/perl5/site_perl/5.6.0/File/SortedSeek.pm
 
