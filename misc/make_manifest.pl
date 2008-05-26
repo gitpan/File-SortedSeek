@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
 # make_manifest.pl - get ready to tarball a module for CPAN
-# this script expects to be in the /misc dir. It makes really clean, writes 
-# a /html dir from the .pm pod, writes an accurate manifest and then fixes 
+# this script expects to be in the /misc dir. It makes really clean, writes
+# a /html dir from the .pm pod, writes an accurate manifest and then fixes
 # up all the line endings.
 
 use strict;
@@ -22,14 +22,14 @@ my ( $dirs, $files ) = recurse_tree($root);
 my @files;
 # erase any undesirable files ie .bak, .pbp
 for (@$files) {
-    unlink, next if m/\.(?:pbp|bak)$/; 
+    unlink, next if m/\.(?:pbp|bak)$/;
     push @files, $_; # add files that we don't erase
 }
 
 # write the HTML
 write_file( $htmldir."docs.css", (join'',<DATA>) ); # write the css
 push @files, $htmldir."docs.css";
-for my $pm (grep { m/\.pm$/ && ! m/lib\b/ } @files ) {
+for my $pm (grep { m/\.pm$/  } @files ) {
     my $name = make_html($pm);
     push @files, $htmldir.$name;
 }
@@ -89,12 +89,13 @@ sub fix_line_endings {
     my $data = <$fh>;
     write_file( "$file.bak" , $data ) if $backup;
     $data =~ s/\015\012/\012/g;
+    $data =~ s/ +\012/\012/g;
     $data =~ s/\t/    /g;
     seek $fh, 0, 0;
     truncate $fh, 0;
     print $fh $data;
     close $fh;
-    $file =~ s/\Q$root\E//o; 
+    $file =~ s/\Q$root\E//o;
     print "Processed $file\n";
 }
 
