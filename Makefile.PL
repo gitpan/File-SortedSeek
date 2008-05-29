@@ -3,5 +3,11 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'          => 'File::SortedSeek',
     'VERSION_FROM'  => 'lib/File/SortedSeek.pm',
-    'PREREQ_PM'     => {'Search::Dict' => 1},
+    'PREREQ_PM'     => {'Time::Local' => 0},
+    ($] >= 5.005 ?
+      (ABSTRACT_FROM  => 'lib/File/SortedSeek.pm',
+       AUTHOR         => 'Dr James Freeman') :
+      ()
+    ),
+    'LICENSE'       => 'lib/File/SortedSeek.pm',
 );

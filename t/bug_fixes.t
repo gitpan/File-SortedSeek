@@ -1,7 +1,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 1 }
+BEGIN { plan tests => 3 }
 
 use lib '../lib';
 use File::SortedSeek;
@@ -24,16 +24,24 @@ close TESTOUT;
 open TESTIN, '<',$file or die "Can't read from test file $!\n";
 $tell = File::SortedSeek::numeric( *TESTIN, '7' );
 my $num_of_sevens=0;
-while ( my $line = <TESTIN> ){
+while ( $line = <TESTIN> ){
     if($line =~ m/7/){
         $num_of_sevens++;
     } else {
         last;
     }
 }
-close TESTIN;
 
 ok($num_of_sevens,20000);
+
+File::SortedSeek::set_cuddle;
+$tell = File::SortedSeek::numeric( *TESTIN, 6.5 );
+chomp($line = <TESTIN>);
+ok($line, 6);
+chomp($line = <TESTIN>);
+ok($line, 7);
+
+close TESTIN;
 
 unlink $file;
 

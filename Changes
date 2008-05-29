@@ -14,3 +14,15 @@ Revision history for Perl extension File::SortedSeek.
     - Major refactoring to use the same proven engine as Search::Dict
     - Thanks to Peter (Stig) Edwards for major input into this
     - Tests refactored into t/test.t form and bug_fixes.t added
+
+0.014 Tue May 27 2008
+    - Removed need to binmode filehandle in get_between() and get_last()
+      functions by using sysseek and sysread to avoid unwanted line ending
+      conversions.
+    - Changed system dependent record separator to a heuristic that should
+      DWIM most of the time. Can always be over ridden.
+    - Added extra test cases
+    - Code clean up
+    - Documentation clean up
+    - Sample scripts added
+    - Added META.yml, t/pod.t t/pod_coverage.t to keep Kwalitee happy

@@ -22,7 +22,8 @@ my ( $dirs, $files ) = recurse_tree($root);
 my @files;
 # erase any undesirable files ie .bak, .pbp
 for (@$files) {
-    unlink, next if m/\.(?:pbp|bak)$/;
+    unlink, next if m/\.(?:pbp|bak|gz)$/;
+    next if m/.bat$/;
     push @files, $_; # add files that we don't erase
 }
 
@@ -43,6 +44,15 @@ write_file( $root."MANIFEST", (join"\n", map{ m/\Q$root\E(.*)/o ;$1 }@files) );
 
 # fix line endings
 fix_line_endings($_) for @files;
+
+# write license file
+eval{require Software::License::Artistic_2_0};
+unless ($@) {
+    my $license = Software::License::Artistic_2_0->new({holder => 'James Freeman',});
+    open F, ">../LICENSE" or die "Can't write LICENSE $!\n";
+    print F $license->fulltext;
+    close F;
+}
 
 # remove all the makefile/make rubbish
 sub make_clean {
