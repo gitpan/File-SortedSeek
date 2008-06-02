@@ -18,6 +18,15 @@ my $htmldir = $root."html/";
 mkdir $htmldir, 0777;      # make the html dir
 unlink <$htmldir*>;        # make sure it is empty
 
+# write license file
+require Software::License::Artistic_2_0;
+unless ($@) {
+    my $license = Software::License::Artistic_2_0->new({holder => 'James Freeman',});
+    open F, ">../LICENSE" or die "Can't write LICENSE $!\n";
+    print F $license->fulltext;
+    close F;
+}
+
 my ( $dirs, $files ) = recurse_tree($root);
 my @files;
 # erase any undesirable files ie .bak, .pbp
@@ -44,15 +53,6 @@ write_file( $root."MANIFEST", (join"\n", map{ m/\Q$root\E(.*)/o ;$1 }@files) );
 
 # fix line endings
 fix_line_endings($_) for @files;
-
-# write license file
-eval{require Software::License::Artistic_2_0};
-unless ($@) {
-    my $license = Software::License::Artistic_2_0->new({holder => 'James Freeman',});
-    open F, ">../LICENSE" or die "Can't write LICENSE $!\n";
-    print F $license->fulltext;
-    close F;
-}
 
 # remove all the makefile/make rubbish
 sub make_clean {

@@ -34,7 +34,8 @@
             <li><a href="#adding_line_munging_to_make_the_basic_methods_more_useful">Adding line munging to make the basic methods more useful</a></li>
         </ul>
 
-        <li><a href="#find_time__"><code>find_time()</code></a></li>
+        <li><a href="#get_epoch_seconds_____convert_a_date_string_into_epoch_time"><code>get_epoch_seconds()</code> - Convert a date string into epoch time</a></li>
+        <li><a href="#find_time_____seek_to_a_specific_time_within_the_file"><code>find_time()</code> - Seek to a specific time within the file</a></li>
         <li><a href="#get_between_____getting_lines_from_the_middle_of_a_file"><code>get_between()</code> - Getting lines from the middle of a file</a></li>
         <li><a href="#get_last_____get_n_lines_from_the_end_of_a_file_"><code>get_last()</code> - Get N lines from the end of a file.</a></li>
     </ul>
@@ -67,6 +68,7 @@
 
 <p>
 </p>
+<hr />
 <h1><a name="name">NAME</a></h1>
 <p>File::SortedSeek - A Perl module providing fast access to large files</p>
 <p>
@@ -232,17 +234,28 @@ simple munge function that does this:</p>
 </pre>
 <p>
 </p>
-<h2><a name="find_time__"><code>find_time()</code></a></h2>
+<h2><a name="get_epoch_seconds_____convert_a_date_string_into_epoch_time"><code>get_epoch_seconds()</code> - Convert a date string into epoch time</a></h2>
+<p>This function returns the epoch seconds represented by a date string in
+the most common log file formats namely:</p>
+<pre>
+    Asctime format: Tue May 27 15:45:00 2008
+    Apache format:  [21/May/2008:17:49:39 +1000]
+    Squid format:   1012429341.115</pre>
+<p>The <code>find_time()</code> method uses this function internally. You can write your own
+munge function if you need a different format. RTFS to see how but all the
+function needs to do is take a data line and return a number that represents
+the time. You could also use Date::Parse to do this for you.</p>
+<p>
+</p>
+<h2><a name="find_time_____seek_to_a_specific_time_within_the_file"><code>find_time()</code> - Seek to a specific time within the file</a></h2>
 <p>The <code>find_time()</code> function is an implementation of the basic numeric method as
 discussed briefly above. You call it like:</p>
 <pre>
     <span class="variable">$tell</span> <span class="operator">=</span> <span class="variable">find_time</span><span class="operator">(</span> <span class="variable">*LOG</span><span class="operator">,</span> <span class="string">'Thu Jan  1 00:42:00 1970'</span> <span class="operator">);</span>
     <span class="variable">$tell</span> <span class="operator">=</span> <span class="variable">find_time</span><span class="operator">(</span> <span class="variable">*LOG</span><span class="operator">,</span> <span class="variable">$epoch_seconds</span> <span class="operator">);</span>
 </pre>
-<p>You may use either an asctime like string or epoch seconds. If you
-use epoch seconds it assumes gmtime. If in doubt use the string as although
-it works internally with gmtime the offsets cancel out and the correct result
-is returned.</p>
+<p>You may use either a date string recognised by <code>get_epoch_seconds()</code> or just
+epoch seconds directly.</p>
 <p>
 </p>
 <h2><a name="get_between_____getting_lines_from_the_middle_of_a_file"><code>get_between()</code> - Getting lines from the middle of a file</a></h2>
@@ -443,8 +456,8 @@ All rights reserved.</p>
 <hr />
 <h1><a name="license">LICENSE</a></h1>
 <p>This package is free software and is provided &quot;as is&quot; without express or
-implied warranty. It may be used, redistributed and/or modified under the terms
-of the Perl Artistic License. See the LICENSE file for details.</p>
+implied warranty. It may be used, redistributed and/or modified under the
+terms of the Artistic License 2.0. A copy is include in this distribution.</p>
 <p>
 </p>
 <hr />

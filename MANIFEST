@@ -2,11 +2,10 @@ MANIFEST
 Changes
 LICENSE
 Makefile.PL
+META.yml
 README
 examples/tail.pl
-misc/kwalitee.t
 misc/make_manifest.pl
-misc/spelling.t
 t/1_load.t
 t/2_numeric_ascending.t
 t/3_numeric_descending.t
@@ -17,10 +16,11 @@ t/7_get_between.t
 t/8_get_last.t
 t/9_munge_ref.t
 t/bug_fixes.t
+t/kwalitee.t
 t/pod.t
 t/pod_coverage.t
 t/speed.test
+t/spelling.t
 lib/File/SortedSeek.pm
 html/docs.css
 html/SortedSeek.html
-META.yml                                 Module meta-data (added by MakeMaker)

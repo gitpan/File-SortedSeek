@@ -10,7 +10,7 @@ use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION );
 @EXPORT      = ();
 @EXPORT_OK   = qw( alphabetic numeric find_time get_between get_last );
 %EXPORT_TAGS = ( 'all' => \@EXPORT_OK );
-$VERSION     = '0.014';
+$VERSION     = '0.015';
 
 my $descending  = 0;
 my $cuddle      = 0;
@@ -60,21 +60,27 @@ sub find_time {
     my $find        = shift || time;
     my $not_gmtime  = shift;
     $error_msg   = '';
-    $find = _get_epoch_seconds($find,$not_gmtime) unless $find =~ m/^[\d.]+$/;
-    _look( *FILE, $find, \&_numeric_compare, \&_get_epoch_seconds );
+    $find = get_epoch_seconds($find,$not_gmtime) unless $find =~ m/^[\d.]+$/;
+    _look( *FILE, $find, \&_numeric_compare, \&get_epoch_seconds );
 }
 
-sub _get_epoch_seconds {
+sub get_epoch_seconds {
     my ($line, $not_gmtime) = @_;
   return undef unless defined $line;
     my ($wday,$mon,$mday,$hours,$min,$sec,$year);
     # look for asctime format: Tue May 27 15:45:00 2008
-    if ($line =~ m/(\w{3})\s+(\w{3})\s+(\d{1,2})\s+(\d\d):(\d\d):(\d\d)\s+(\d{4})/ ) {
-       ($wday,$mon,$mday,$hours,$min,$sec,$year) = ($1,$2,$3,$4,$5,$6,$7);
+    # ignore wday token as this is often dropped ie linux kernel messages
+    if ($line =~ m/(\w{3})\s+(\d{1,2})\s+(\d\d):(\d\d):(\d\d)\s+(\d{4})/ ) {
+       ($mon,$mday,$hours,$min,$sec,$year) = ($1,$2,$3,$4,$5,$6);
     }
     # look for apache time format: [21/May/2008:17:49:39 +1000]
+    # ignore the time offset
     elsif($line =~ m!\[(\d{1,2})/(\w{3})/(\d{4}):(\d\d):(\d\d):(\d\d)!x ) {
        ($mday,$mon,$year,$hours,$min,$sec) = ($1,$2,$3,$4,$5,$6);
+    }
+    # look for straight epochtime data (ie squid log)
+    elsif($line =~ m/^(\d+)/) {
+        return $1;
     }
     unless ($year) {
         $error_msg = "Unable to find time like string in line:\n$line";
@@ -189,6 +195,10 @@ sub _look {
 1;
 
 __END__
+
+=pod
+
+=for stopwords Stig refactored ta da hh mm ss dd mm yyyy recognised
 
 =head1 NAME
 
@@ -350,7 +360,21 @@ simple munge function that does this:
         return lc $_;  # makes comparison case insensistive
     }
 
-=head2 find_time()
+=head2 get_epoch_seconds() - Convert a date string into epoch time
+
+This function returns the epoch seconds represented by a date string in
+the most common log file formats namely:
+
+    Asctime format: Tue May 27 15:45:00 2008
+    Apache format:  [21/May/2008:17:49:39 +1000]
+    Squid format:   1012429341.115
+
+The find_time() method uses this function internally. You can write your own
+munge function if you need a different format. RTFS to see how but all the
+function needs to do is take a data line and return a number that represents
+the time. You could also use Date::Parse to do this for you.
+
+=head2 find_time() - Seek to a specific time within the file
 
 The find_time() function is an implementation of the basic numeric method as
 discussed briefly above. You call it like:
@@ -358,10 +382,8 @@ discussed briefly above. You call it like:
     $tell = find_time( *LOG, 'Thu Jan  1 00:42:00 1970' );
     $tell = find_time( *LOG, $epoch_seconds );
 
-You may use either an asctime like string or epoch seconds. If you
-use epoch seconds it assumes gmtime. If in doubt use the string as although
-it works internally with gmtime the offsets cancel out and the correct result
-is returned.
+You may use either a date string recognised by get_epoch_seconds() or just
+epoch seconds directly.
 
 =head2 get_between() - Getting lines from the middle of a file
 
@@ -555,14 +577,14 @@ search function.
 
 =head1 AUTHOR
 
-(c) Dr James Freeman 2000-08 E<lt>airmedical [TA] gmail.comE<gt>
+(c) Dr James Freeman 2000-08 <airmedical [TA] gmail.com>
 All rights reserved.
 
 =head1 LICENSE
 
 This package is free software and is provided "as is" without express or
-implied warranty. It may be used, redistributed and/or modified under the terms
-of the Perl Artistic License. See the LICENSE file for details.
+implied warranty. It may be used, redistributed and/or modified under the
+terms of the Artistic License 2.0. A copy is include in this distribution.
 
 =head1 SEE ALSO
 

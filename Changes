@@ -26,3 +26,12 @@ Revision history for Perl extension File::SortedSeek.
     - Documentation clean up
     - Sample scripts added
     - Added META.yml, t/pod.t t/pod_coverage.t to keep Kwalitee happy
+
+0.015 Mon June 2 2008
+    - Made pod.t pod_coverage.t kwalitee.t spelling.t test private so
+      they only run is RELEASE_TESTING environment var is set - the pod
+      tests have been causing spurious test failures.
+    - Hacked my Extutils::MM_Any.pm to write a "proper" META.yml
+    - Added support for all common logfile date string formats by default
+
+TODO: Sample script
